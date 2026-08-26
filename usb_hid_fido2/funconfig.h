@@ -1,0 +1,8 @@
+#ifndef _FUNCONFIG_H
+#define _FUNCONFIG_H
+
+#define FUNCONF_USE_DEBUGPRINTF 0
+#define FUNCONF_USE_UARTPRINTF  0
+#define FUNCONF_NULL_PRINTF     1
+
+#endif

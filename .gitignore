@@ -1,0 +1,20 @@
+# Build artifacts
+usb_hid_fido2/*.bin
+usb_hid_fido2/*.hex
+usb_hid_fido2/*.elf
+usb_hid_fido2/*.map
+usb_hid_fido2/*.lst
+usb_hid_fido2/*.o
+usb_hid_fido2/*.d
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Local results
+host-tools/resultados_validacion.txt
+
+# OS
+Thumbs.db
+.DS_Store

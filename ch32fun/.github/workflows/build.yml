@@ -1,0 +1,64 @@
+name: Build CI
+
+on: [push, pull_request]
+
+jobs:
+  build-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          # remove man-db to avoid slow trigger step
+          sudo apt-get -yqq purge man-db || true
+          sudo apt-get install -y --no-install-recommends \
+            build-essential make libnewlib-dev gcc-riscv64-unknown-elf libusb-1.0-0-dev libudev-dev parallel
+
+      - name: Build all examples (max 10 in parallel)
+        run: |
+          set -e
+          find examples* -maxdepth 3 -name funconfig.h \
+            | parallel -j 10 '
+                dir=$(dirname {});
+                echo "============================"
+                echo "Building example: $dir"
+                echo "============================"
+                (cd "$dir" && make V=1 -j3 "$(basename "$dir").elf" 2>&1 && riscv64-unknown-elf-size "$(basename "$dir").elf")
+            '
+  build-all-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install xPack GCC + Make
+        shell: pwsh
+        run: |
+          ./misc/install_xpack_gcc.ps1 -SkipPrompts
+      - name: Build all examples
+        shell: cmd
+        run: |
+          cd build_scripts
+          build_all.cmd
+  # Build using PlatformIO
+  pio-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.platformio/.cache
+        key: ${{ runner.os }}-pio
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+    - name: Install PlatformIO Core
+      run: pip install --upgrade platformio
+    - name: Build PlatformIO Project
+      run: pio run -v
