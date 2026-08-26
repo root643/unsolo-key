@@ -22,6 +22,19 @@ and **CredentialManagement** with per-command token verification.
 
 ---
 
+## Download prebuilt firmware
+
+No toolchain required to try it — grab the latest prebuilt binaries from the
+**[Releases](https://github.com/root643/unsolo-key/releases)** page:
+
+- `firmware-main.bin` — raw binary, base address `0x08000000` (for `minichlink` / `wlink`)
+- `firmware-main.hex` — Intel HEX (for WCH-ISPStudio / `wchisp`)
+
+Each release lists SHA-256 checksums and step-by-step flashing instructions
+(WCH-LinkE 3-wire SDI or USB-bootloader methods).
+
+---
+
 ## Table of contents
 
 - [Why](#why)
